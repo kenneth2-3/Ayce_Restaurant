@@ -6,6 +6,7 @@ cloudinary==1.44.1
 dj-database-url==3.0.1
 Django==4.2.23
 django-allauth==65.10.0
+django-cloudinary-storage==0.3.0
 google-auth==2.38.0
 google-auth-oauthlib==1.2.1
 gspread==6.2.0
