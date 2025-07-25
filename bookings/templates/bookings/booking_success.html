@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Confirmed{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h2 class="text-success">Booking Confirmed!</h2>
+    <p class="lead">Thank you for booking with us.</p>
+    <div class="card p-3 my-4 mx-auto" style="max-width: 500px;">
+        <p><strong>Date:</strong> {{ booking.date }}</p>
+        <p><strong>Time:</strong> {{ booking.time }}</p>
+        <p><strong>Guests:</strong> {{ booking.guests }}</p>
+        <p><strong>Table:</strong> {{ booking.table }}</p>
+        <p><strong>Email:</strong> {{ booking.email }}</p>
+        <p><strong>Phone:</strong> {{ booking.phone }}</p>
+        {% if booking.special_requests %}
+            <p><strong>Requests:</strong> {{ booking.special_requests }}</p>
+        {% endif %}
+    </div>
+    <a href="{% url 'user_bookings' %}" class="btn btn-outline-primary">View My Bookings</a>
+</div>
+{% endblock %}

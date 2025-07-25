@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .forms import BookingForm
 from django.contrib import messages
 from .models import MenuItem
+from .models import Booking
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -21,10 +24,10 @@ def book_table(request):
         form = BookingForm(request.POST)
         if form.is_valid():
             booking = form.save(commit=False)
-            booking.user = request.user
+            if request.user.is_authenticated:
+                booking.user = request.user
             booking.save()
-            messages.success(request, 'Booking successful!')
-            return redirect('confirmation')  # Make sure you have this route
+            return render(request, 'bookings/booking_success.html', {'booking': booking})
     else:
         form = BookingForm()
     return render(request, 'bookings/booking_form.html', {'form': form})
@@ -33,6 +36,17 @@ def book_table(request):
 def confirmation(request):
     return render(request, 'bookings/confirmation.html')
 
+@login_required
+def user_bookings(request):
+    bookings = Booking.objects.filter(user=request.user).order_by('-date', '-time')
+    return render(request, 'bookings/user_dashboard.html', {'bookings': bookings})
+
+@login_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    if request.method == 'POST':
+        booking.delete()
+        return redirect('user_bookings')
 
 @login_required
 def book_table(request):
