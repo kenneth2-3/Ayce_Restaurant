@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import BookingForm
 from .models import MenuItem
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 
@@ -29,3 +30,16 @@ def book_table(request):
 @login_required
 def booking_confirmation(request):
     return render(request, 'bookings/confirmation.html')
+
+
+@login_required
+def book_table(request):
+    # Later we'll add form logic here
+    return render(request, 'bookings/booking_form.html')
+
+
+@staff_member_required
+def staff_dashboard(request):
+    # Later we'll add overview of bookings, cancellations, etc.
+    return render(request, 'bookings/staff_dashboard.html')
+
