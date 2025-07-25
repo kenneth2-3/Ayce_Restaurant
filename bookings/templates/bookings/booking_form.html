@@ -1,13 +1,25 @@
-{% extends "base.html" %}
-{% load static %}
+{% extends 'base.html' %}
+
+{% block title %}Book a Table{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Book a Table</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Book Now</button>
-    </form>
-</div>
+<h2 class="mb-4">Book a Table</h2>
+
+<form method="post" class="row g-3">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="col-md-6">
+            <label class="form-label">{{ field.label_tag }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div class="text-danger">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Submit Booking</button>
+    </div>
+</form>
 {% endblock %}
+
