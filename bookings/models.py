@@ -30,9 +30,17 @@ class Booking(models.Model):
 
 
 class MenuItem(models.Model):
+    CATEGORY_CHOICES = [
+        ('appetizer', 'Appetizer'),
+        ('main', 'Main Course'),
+        ('dessert', 'Dessert'),
+        ('drink', 'Drink'),
+    ]
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    image = models.ImageField(upload_to='menu/', blank=True, null=True)
     available = models.BooleanField(default=True)
 
     def __str__(self):

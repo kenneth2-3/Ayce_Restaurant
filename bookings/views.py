@@ -15,7 +15,11 @@ def home(request):
     return render(request, 'bookings/home.html')
 
 def menu(request):
-    items = MenuItem.objects.filter(available=True)
+    show_all = request.GET.get('all') == '1'
+    if show_all:
+        items = MenuItem.objects.all().order_by('category', 'name')
+    else:
+        items = MenuItem.objects.filter(available=True).order_by('category', 'name')
     return render(request, 'bookings/menu.html', {'items': items})
 
 @login_required
@@ -47,12 +51,6 @@ def cancel_booking(request, booking_id):
     if request.method == 'POST':
         booking.delete()
         return redirect('user_bookings')
-
-@login_required
-def book_table(request):
-    # Later we'll add form logic here
-    return render(request, 'bookings/booking_form.html')
-
 
 @staff_member_required
 def staff_dashboard(request):

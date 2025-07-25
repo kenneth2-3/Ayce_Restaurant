@@ -6,4 +6,8 @@ from .models import Table, Booking, MenuItem
 
 admin.site.register(Table)
 admin.site.register(Booking)
-admin.site.register(MenuItem)
+
+@admin.register(MenuItem)
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'price')
+    list_filter = ('category',)
