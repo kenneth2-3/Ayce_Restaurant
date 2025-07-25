@@ -1,31 +1,53 @@
 {% extends 'base.html' %}
-{% block title %}My Bookings{% endblock %}
-
 {% block content %}
-<h2>My Bookings</h2>
-<table class="table table-striped">
-    <thead>
+  <div class="container mt-5">
+    <h2>My Bookings</h2>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <table class="table table-bordered table-hover">
+      <thead>
         <tr>
-            <th>Date</th><th>Time</th><th>Guests</th><th>Table</th><th>Actions</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Guests</th>
+          <th>Table</th>
+          <th>Status</th>
+          <th>Actions</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for booking in bookings %}
-        <tr>
+          <tr>
             <td>{{ booking.date }}</td>
             <td>{{ booking.time }}</td>
             <td>{{ booking.guests }}</td>
             <td>{{ booking.table }}</td>
             <td>
-                <form action="{% url 'cancel_booking' booking.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-                </form>
+              {% if booking.status == 'pending' %}
+                <span class="badge bg-warning text-dark">Pending</span>
+              {% elif booking.status == 'completed' %}
+                <span class="badge bg-success">Completed</span>
+              {% elif booking.status == 'cancelled' %}
+                <span class="badge bg-danger">Cancelled</span>
+              {% endif %}
             </td>
-        </tr>
+            <td>
+              {% if booking.status == 'pending' %}
+                <a href="{% url 'cancel_user_booking' booking.id %}" class="btn btn-sm btn-danger">Cancel</a>
+              {% else %}
+                <span class="text-muted">No actions</span>
+              {% endif %}
+            </td>
+          </tr>
         {% empty %}
-        <tr><td colspan="5">No bookings yet.</td></tr>
+          <tr>
+            <td colspan="6">You have no bookings yet.</td>
+          </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

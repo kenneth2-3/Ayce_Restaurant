@@ -47,16 +47,20 @@ def user_bookings(request):
     return render(request, 'bookings/user_dashboard.html', {'bookings': bookings})
 
 @login_required
-def cancel_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-    if request.method == 'POST':
-        booking.delete()
-        return redirect('user_bookings')
+def cancel_user_booking(request, pk):
+    booking = get_object_or_404(Booking, pk=pk, user=request.user)
+    if booking.status == 'pending':
+        booking.status = 'cancelled'
+        booking.save()
+        messages.success(request, "Booking cancelled.")
+    else:
+        messages.warning(request, "You cannot cancel this booking.")
+    return redirect('user_bookings')
 
 @staff_member_required
 def staff_dashboard(request):
     bookings = Booking.objects.order_by('date', 'time')
-    return render(request, 'staff_dashboard.html', {'bookings': bookings})
+    return render(request, 'bookings/staff_dashboard.html', {'bookings': bookings})
 
 @staff_member_required
 def cancel_booking(request, pk):
