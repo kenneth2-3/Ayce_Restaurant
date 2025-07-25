@@ -1,6 +1,6 @@
 from django import forms
 from .models import Booking
-from django.core.exceptions import ValidationError
+from datetime import datetime as dt_datetime
 from django.forms.widgets import DateInput, TimeInput
 
 class BookingForm(forms.ModelForm):
@@ -8,8 +8,8 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ['email', 'phone', 'date', 'time', 'guests', 'table', 'special_requests']
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'time': forms.TimeInput(attrs={'type': 'time'}),
+            'date': DateInput(attrs={'type': 'date'}),
+            'time': TimeInput(attrs={'type': 'time'}),
             'special_requests': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Any special requests?'}),
         }
 
