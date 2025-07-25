@@ -15,10 +15,13 @@ class Table(models.Model):
 
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField()
+    phone = models.CharField(max_length=12)
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     guests = models.PositiveIntegerField()
+    special_requests = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

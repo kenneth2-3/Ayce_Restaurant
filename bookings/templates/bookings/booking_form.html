@@ -1,11 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
 <div class="container">
     <h2>Book a Table</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Confirm Booking</button>
+        <button type="submit" class="btn btn-success">Book Now</button>
     </form>
 </div>
 {% endblock %}

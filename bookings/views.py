@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import BookingForm
+from django.contrib import messages
 from .models import MenuItem
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -22,13 +23,14 @@ def book_table(request):
             booking = form.save(commit=False)
             booking.user = request.user
             booking.save()
-            return redirect('booking_confirmation')
+            messages.success(request, 'Booking successful!')
+            return redirect('confirmation')  # Make sure you have this route
     else:
         form = BookingForm()
     return render(request, 'bookings/booking_form.html', {'form': form})
 
 @login_required
-def booking_confirmation(request):
+def confirmation(request):
     return render(request, 'bookings/confirmation.html')
 
 

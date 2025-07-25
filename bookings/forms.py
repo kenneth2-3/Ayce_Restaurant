@@ -1,14 +1,15 @@
 from django import forms
 from .models import Booking
-from django.forms.widgets import SelectDateWidget, TimeInput
+from django.forms.widgets import DateInput, TimeInput
 
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = ['date', 'time', 'guests', 'table']
+        fields = ['email', 'phone', 'date', 'time', 'guests', 'table', 'special_requests']
         widgets = {
-            'date': SelectDateWidget(),
+            'date': DateInput(attrs={'type': 'date'}),
             'time': TimeInput(attrs={'type': 'time'}),
+            'special_requests': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Any special requests?'}),
         }
 
     def clean(self):
