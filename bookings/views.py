@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .forms import BookingForm
-from django.contrib import messages
+from itertools import groupby
+from operator import attrgetter
 from .models import MenuItem
 from .models import Booking
 from django.contrib.auth.decorators import login_required
@@ -15,12 +15,12 @@ def home(request):
     return render(request, 'bookings/home.html')
 
 def menu(request):
-    show_all = request.GET.get('all') == '1'
-    if show_all:
-        items = MenuItem.objects.all().order_by('category', 'name')
-    else:
-        items = MenuItem.objects.filter(available=True).order_by('category', 'name')
-    return render(request, 'bookings/menu.html', {'items': items})
+    items = MenuItem.objects.all().order_by('category', 'name')
+    grouped_items = {}
+    for category, group in groupby(items, key=attrgetter('category')):
+        grouped_items[category] = list(group)
+
+    return render(request, 'bookings/menu.html', {'grouped_items': grouped_items})
 
 @login_required
 def book_table(request):
