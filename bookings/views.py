@@ -5,6 +5,7 @@ from itertools import groupby
 from operator import attrgetter
 from .models import MenuItem
 from .models import Booking
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -54,6 +55,21 @@ def cancel_booking(request, booking_id):
 
 @staff_member_required
 def staff_dashboard(request):
-    # Later we'll add overview of bookings, cancellations, etc.
-    return render(request, 'bookings/staff_dashboard.html')
+    bookings = Booking.objects.order_by('date', 'time')
+    return render(request, 'staff_dashboard.html', {'bookings': bookings})
 
+@staff_member_required
+def cancel_booking(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    booking.status = 'cancelled'
+    booking.save()
+    messages.success(request, f'Booking #{pk} cancelled.')
+    return redirect('staff_dashboard')
+
+@staff_member_required
+def complete_booking(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    booking.status = 'completed'
+    booking.save()
+    messages.success(request, f'Booking #{pk} marked as completed.')
+    return redirect('staff_dashboard')
